@@ -1,0 +1,38 @@
+name: Build AgeAvion
+
+on: [push]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - run: pip install pyinstaller requests PyPDF2
+
+      - run: pyinstaller --onefile --windowed --add-data "Airlines_codes.pdf;." age_avion_app.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exe-windows
+          path: dist/*.exe
+
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - run: pip install pyinstaller requests PyPDF2
+
+      - run: pyinstaller --onefile --windowed --add-data "Airlines_codes.pdf:." age_avion_app.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-mac
+          path: dist/*
